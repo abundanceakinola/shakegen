@@ -12,26 +12,23 @@ char_mappings_url = "https://drive.google.com/uc?id=1YurcSu0Xnnr966aVMqhX_PpjpqU
 
 # Local filenames
 model_file = "best_model.keras"
-char_mappings_file = "char_mappings.json"
 
-# Check if the model exists locally, and remove if needed to re-download
-if os.path.exists(model_file):
-    os.remove(model_file)
-
-# Download the model from Google Drive
-with st.spinner('Downloading the latest model from Google Drive...'):
-    gdown.download(model_file_url, model_file, quiet=False)
-
-# Check if the character mappings file exists, and remove if needed
-if os.path.exists(char_mappings_file):
-    os.remove(char_mappings_file)
-
-# Download the char mappings from Google Drive
-with st.spinner('Downloading character mappings from Google Drive...'):
-    gdown.download(char_mappings_url, char_mappings_file, quiet=False)
+# Only download if the model file doesn't exist
+if not os.path.exists(model_file):
+    with st.spinner('Downloading the model from Google Drive...'):
+        gdown.download(model_file_url, model_file, quiet=False)
 
 # Load the model
 model = load_model(model_file)
+
+
+char_mappings_file = "char_mappings.json"
+
+# Only download the character mappings if it doesn't exist locally
+if not os.path.exists(char_mappings_file):
+    with st.spinner('Downloading character mappings from Google Drive...'):
+        gdown.download(char_mappings_url, char_mappings_file, quiet=False)
+
 
 # Load the character mappings from the JSON file
 with open(char_mappings_file, 'r') as f:
