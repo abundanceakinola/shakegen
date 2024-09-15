@@ -1,1 +1,7 @@
-streamlit>=1.26.0
+streamlit
+tensorflow
+numpy
+nltk
+language_tool_python
+scipy
+
