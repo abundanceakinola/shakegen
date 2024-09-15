@@ -1,13 +1,11 @@
-# 📦 Streamlit App Starter Kit 
-```
-⬆️ (Replace above with your app's name)
-```
+# Sonnet Generation App based on LSTM 
 
-Description of the app ...
+
+This is a text generation app that generates sonnets similar to Shakespeare's sonnets using the LSTM model
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://app-starter-kit.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shakegen.streamlit.app/)
 
 ## GitHub Codespaces
 
