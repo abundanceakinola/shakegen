@@ -70,6 +70,9 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
 
         if len(generated_text) > 1000:  # Safeguard against infinite loops
             break
+        print(f"index_to_char length: {len(index_to_char)}")
+        print(f"Next index: {next_index}")
+
 
     return generated_text
 
