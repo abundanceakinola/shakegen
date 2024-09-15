@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 
 # URL for the Google Drive file (replace with your shareable link)
-file_url = "https://drive.google.com/file/d/1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5/view?usp=drive_link"  # Replace with your file ID
+file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Replace with your file ID
 output_file = "best_model.keras"  # This is the filename to save it as locally
 
 # Check if the model exists, and if so, delete it to force re-download
