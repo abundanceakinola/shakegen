@@ -5,4 +5,4 @@ st.title('ShakeGen')
 st.info('AI-powered Shakespearean Sonnet Generator')
 
 with st.chat_message("assistant"):
-    st.write("Hello 👋")
+    st.write("Hello! I am ShakeGen. What should I generate for you today?")
