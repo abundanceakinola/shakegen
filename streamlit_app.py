@@ -52,15 +52,17 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
                 x[0, t, char_to_index[char]] = 1
 
         predictions = model.predict(x, verbose=0)[0]
-        next_index = sample(predictions, temperature)
+        print(f"Predictions: {predictions}")  # Debugging: Print the predictions
 
-        # Ensure the next_index is within the valid range of index_to_char
+        next_index = sample(predictions, temperature)
+        print(f"Next index: {next_index}")  # Debugging: Check the next predicted index
+
         if next_index in index_to_char:
             next_char = index_to_char[next_index]
         else:
-            # Handle out-of-range index (fallback mechanism)
-            next_char = ''  # Could be an empty string or a placeholder character
+            next_char = ''  # Handle out-of-range index
 
+        print(f"Generated character: {next_char}")  # Debugging: Log the generated character
         generated_text += next_char
 
         if next_char == '\n':
