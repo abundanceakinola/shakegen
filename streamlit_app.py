@@ -6,25 +6,39 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-# URL for the Google Drive file (replace with your shareable link)
-file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Replace with your file ID
-output_file = "best_model.keras"  # This is the filename to save it as locally
+# Model file URL and character mappings URL from Google Drive
+model_file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Model file link
+char_mappings_url = "https://drive.google.com/uc?id=1YurcSu0Xnnr966aVMqhX_PpjpqU-QHJX"  # Replace with char_mappings.json file ID
 
-# Check if the model exists, and if so, delete it to force re-download
-if os.path.exists(output_file):
-    os.remove(output_file)
+# Local filenames
+model_file = "best_model.keras"
+char_mappings_file = "char_mappings.json"
+
+# Check if the model exists locally, and remove if needed to re-download
+if os.path.exists(model_file):
+    os.remove(model_file)
 
 # Download the model from Google Drive
 with st.spinner('Downloading the latest model from Google Drive...'):
-    gdown.download(file_url, output_file, quiet=False)
+    gdown.download(model_file_url, model_file, quiet=False)
 
+# Check if the character mappings file exists, and remove if needed
+if os.path.exists(char_mappings_file):
+    os.remove(char_mappings_file)
+
+# Download the char mappings from Google Drive
+with st.spinner('Downloading character mappings from Google Drive...'):
+    gdown.download(char_mappings_url, char_mappings_file, quiet=False)
 
 # Load the model
-model = load_model(output_file)
+model = load_model(model_file)
 
-# Load your character mappings
-char_to_index = ...  # Load your char_to_index dictionary here
-index_to_char = ...  # Load your index_to_char dictionary here
+# Load the character mappings from the JSON file
+with open(char_mappings_file, 'r') as f:
+    char_mappings = json.load(f)
+    char_to_index = char_mappings["char_to_index"]
+    index_to_char = char_mappings["index_to_char"]
+
 vocab_size = len(char_to_index)  # Ensure this matches your model's vocabulary size
 seq_length = 50  # Define your sequence length
 
