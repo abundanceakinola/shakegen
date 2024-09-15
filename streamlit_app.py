@@ -56,7 +56,13 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
 
         predictions = model.predict(x, verbose=0)[0]
         next_index = sample(predictions, temperature)
-        next_char = index_to_char[next_index]
+
+        # Ensure the next_index is within the valid range of index_to_char
+        if next_index in index_to_char:
+            next_char = index_to_char[next_index]
+        else:
+            # Handle out-of-range index (fallback mechanism)
+            next_char = ''  # Could be an empty string or a placeholder character
 
         generated_text += next_char
 
@@ -67,6 +73,7 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
             break
 
     return generated_text
+
 
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
