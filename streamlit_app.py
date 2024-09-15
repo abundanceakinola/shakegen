@@ -9,8 +9,13 @@ from tensorflow.keras.models import load_model
 file_url = "https://drive.google.com/file/d/1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5/view?usp=drive_link"  # Replace with your file ID
 output_file = "best_model.keras"  # This is the filename to save it as locally
 
+# Check if the model exists, and if so, delete it to force re-download
+if os.path.exists(output_file):
+    os.remove(output_file)
+
+# Download the model from Google Drive
 with st.spinner('Downloading the latest model from Google Drive...'):
-    gdown.download(file_url, output_file, quiet=False, overwrite=True)
+    gdown.download(file_url, output_file, quiet=False)
 
 
 # Load the model
