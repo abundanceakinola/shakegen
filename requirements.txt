@@ -5,4 +5,5 @@ nltk
 language_tool_python
 scipy
 gdown
+re
 language_tool_python
