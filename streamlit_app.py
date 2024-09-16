@@ -40,6 +40,7 @@ vocab_size = len(char_to_index)  # Ensure this matches your model's vocabulary s
 seq_length = 50  # Define your sequence length
 
 # Function to generate text using the model
+# Modify the generate_sonnet function
 def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, index_to_char, temperature=1.0):
     generated_text = seed_text
     required_length = 14  # 14 lines in a sonnet
@@ -55,12 +56,11 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
         next_index = sample(predictions, temperature)
 
         # Ensure the next index is valid
-        if next_index in index_to_char:
-            next_char = index_to_char[next_index]
-            print(f"Generated character: {repr(next_char)}")  # Use repr() to make special characters visible
+        if str(next_index) in index_to_char:
+            next_char = index_to_char[str(next_index)]
         else:
+            print(f"Warning: Invalid index {next_index}. Using fallback character.")
             next_char = ' '  # Fallback to space if index is out of range
-
 
         generated_text += next_char
 
@@ -71,13 +71,9 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
         if len(generated_text) > 1000:
             break
 
-        print(f"Predictions: {predictions}")
+        print(f"Predictions shape: {predictions.shape}")
         print(f"Next index: {next_index}")
-        print(f"Generated character: {next_char}")
-        print(f"Character at index 2: {repr(index_to_char[2])}")
-        print(f"First 10 characters in index_to_char: {[repr(index_to_char[i]) for i in range(10)]}")
-
-
+        print(f"Generated character: {repr(next_char)}")
 
     return generated_text
 
@@ -126,3 +122,14 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
     
     # Append the generated text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": generated_sonnet})
+
+# Add this debugging information
+st.sidebar.write("Debugging Information:")
+st.sidebar.write(f"Vocabulary size: {vocab_size}")
+st.sidebar.write(f"Number of characters in mapping: {len(index_to_char)}")
+st.sidebar.write("First 10 character mappings:")
+for i in range(10):
+    if str(i) in index_to_char:
+        st.sidebar.write(f"{i}: {repr(index_to_char[str(i)])}")
+    else:
+        st.sidebar.write(f"{i}: Not found in mapping")
