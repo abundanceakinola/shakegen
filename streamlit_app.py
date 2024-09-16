@@ -89,12 +89,18 @@ def sample(preds, temperature=1.0):
 
 
 def format_sonnet(text):
-    # Split the text by <LINE> tags
-    lines = re.split(r'<LINE>', text)
-    # Remove empty lines and strip whitespace
-    lines = [line.strip() for line in lines if line.strip()]
-    # Join the lines with newline characters
-    formatted_text = '\n'.join(lines)
+    # If no <LINE> tags, treat the entire text as a single block
+    if '<LINE>' not in text:
+        # Format the text without assuming <LINE> tags
+        formatted_text = text.strip()
+    else:
+        # Split the text by <LINE> tags if they exist
+        lines = re.split(r'<LINE>', text)
+        # Remove empty lines and strip whitespace
+        lines = [line.strip() for line in lines if line.strip()]
+        # Join the lines with newline characters
+        formatted_text = '\n'.join(lines)
+    
     # Remove any remaining tags
     formatted_text = re.sub(r'<[^>]+>', '', formatted_text)
     return formatted_text
