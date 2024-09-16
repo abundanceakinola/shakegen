@@ -106,6 +106,8 @@ def format_sonnet(text):
     formatted_text = re.sub(r'<[^>]+>', '', formatted_text)
     return formatted_text
 
+import re
+
 def simple_text_cleanup(text):
     # Capitalize the first letter of each line
     lines = text.split('\n')
@@ -114,14 +116,15 @@ def simple_text_cleanup(text):
     # Join the lines back together
     cleaned_text = '\n'.join(cleaned_lines)
     
-    # Remove any non-alphabetic characters at the beginning of words
-    cleaned_text = re.sub(r'\b[^a-zA-Z]+', '', cleaned_text)
+    # Remove any non-alphabetic characters except spaces within the words
+    cleaned_text = re.sub(r'[^a-zA-Z\s.,]', '', cleaned_text)  # Keeps letters, spaces, commas, and periods
     
-    # Ensure there's a space after each comma and period
+    # Ensure there's a space after each comma and period if it's missing
     cleaned_text = re.sub(r',(\S)', r', \1', cleaned_text)
     cleaned_text = re.sub(r'\.(\S)', r'. \1', cleaned_text)
     
     return cleaned_text
+
     
 # Streamlit UI
 st.title('ShakeGen')
