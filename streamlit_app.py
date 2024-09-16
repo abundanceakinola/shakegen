@@ -7,16 +7,26 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-# Model file URL and character mappings URL from Google Drive
-model_file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Model file link
-char_mappings_url = "https://drive.google.com/uc?id=1YurcSu0Xnnr966aVMqhX_PpjpqU-QHJX"  # Replace with char_mappings.json file ID
+# Load the latest model version from Google Drive
+version_file_url = "https://drive.google.com/uc?id=1zaNKBM8-RAfrQF9FfkcvoKBIfM6fcfou"  # Replace with your version.txt file ID
+
+# Download the version file to check the latest model
+version_file = "version.txt"
+gdown.download(version_file_url, version_file, quiet=False)
+
+# Read the latest model version from version.txt
+with open(version_file, 'r') as f:
+    latest_model_filename = f.read().strip()
+
+# Construct the URL to the model file
+model_file_url = f"https://drive.google.com/uc?id=1bv1XhAQY_-73DKalRLpDhukGf9h8QAok"  # Replace with actual Google Drive model file ID for the version
 
 # Local filenames
-model_file = "best_model.keras"
+model_file = latest_model_filename
 
 # Only download if the model file doesn't exist
 if not os.path.exists(model_file):
-    with st.spinner('Downloading the model from Google Drive...'):
+    with st.spinner('Downloading the latest model from Google Drive...'):
         gdown.download(model_file_url, model_file, quiet=False)
 
 # Load the model
