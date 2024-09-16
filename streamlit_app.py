@@ -6,7 +6,6 @@ import json
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-from language_tool_python import LanguageTool
 
 # Model file URL and character mappings URL from Google Drive
 model_file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Model file link
@@ -107,10 +106,22 @@ def format_sonnet(text):
     formatted_text = re.sub(r'<[^>]+>', '', formatted_text)
     return formatted_text
 
-def correct_grammar(text):
-    tool = LanguageTool('en-US')
-    corrected_text = tool.correct(text)
-    return corrected_text
+def simple_text_cleanup(text):
+    # Capitalize the first letter of each line
+    lines = text.split('\n')
+    cleaned_lines = [line.capitalize() for line in lines]
+    
+    # Join the lines back together
+    cleaned_text = '\n'.join(cleaned_lines)
+    
+    # Remove any non-alphabetic characters at the beginning of words
+    cleaned_text = re.sub(r'\b[^a-zA-Z]+', '', cleaned_text)
+    
+    # Ensure there's a space after each comma and period
+    cleaned_text = re.sub(r',(\S)', r', \1', cleaned_text)
+    cleaned_text = re.sub(r'\.(\S)', r'. \1', cleaned_text)
+    
+    return cleaned_text
     
 # Streamlit UI
 st.title('ShakeGen')
