@@ -57,8 +57,10 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
         # Ensure the next index is valid
         if next_index in index_to_char:
             next_char = index_to_char[next_index]
+            print(f"Generated character: {repr(next_char)}")  # Use repr() to make special characters visible
         else:
             next_char = ' '  # Fallback to space if index is out of range
+
 
         generated_text += next_char
 
@@ -72,6 +74,10 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
         print(f"Predictions: {predictions}")
         print(f"Next index: {next_index}")
         print(f"Generated character: {next_char}")
+        print(f"Character at index 2: {repr(index_to_char[2])}")
+        print(f"First 10 characters in index_to_char: {[repr(index_to_char[i]) for i in range(10)]}")
+
+
 
     return generated_text
 
