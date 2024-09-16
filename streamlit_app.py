@@ -87,6 +87,23 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
+
+def format_sonnet(text):
+    # Split the text by <LINE> tags
+    lines = re.split(r'<LINE>', text)
+    # Remove empty lines and strip whitespace
+    lines = [line.strip() for line in lines if line.strip()]
+    # Join the lines with newline characters
+    formatted_text = '\n'.join(lines)
+    # Remove any remaining tags
+    formatted_text = re.sub(r'<[^>]+>', '', formatted_text)
+    return formatted_text
+
+def correct_grammar(text):
+    tool = LanguageTool('en-US')
+    corrected_text = tool.correct(text)
+    return corrected_text
+    
 # Streamlit UI
 st.title('ShakeGen')
 
@@ -118,10 +135,21 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
             index_to_char=index_to_char,
             temperature=1.0  # You can allow the user to change this if needed
         )
-        st.markdown(generated_sonnet)
+        
+        # Format the generated sonnet
+        formatted_sonnet = format_sonnet(generated_sonnet)
+        
+        # Correct grammar
+        corrected_sonnet = correct_grammar(formatted_sonnet)
+        
+        st.markdown("**Generated Sonnet:**")
+        st.markdown(formatted_sonnet)
+        
+        st.markdown("**Grammar-Corrected Sonnet:**")
+        st.markdown(corrected_sonnet)
     
-    # Append the generated text to the chat history
-    st.session_state.chats.append({"role": "assistant", "content": generated_sonnet})
+    # Append the generated and corrected text to the chat history
+    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Grammar-Corrected Sonnet:**\n\n{corrected_sonnet}"})
 
 # Add this debugging information
 st.sidebar.write("Debugging Information:")
