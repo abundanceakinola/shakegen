@@ -6,6 +6,7 @@ import json
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+from language_tool_python import LanguageTool
 
 # Model file URL and character mappings URL from Google Drive
 model_file_url = "https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Model file link
