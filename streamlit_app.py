@@ -165,7 +165,7 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
             vocab_size=vocab_size,
             char_to_index=char_to_index,
             index_to_char=index_to_char,
-            temperature=1.0  # You can allow the user to change this if needed
+            temperature=0.5  # You can allow the user to change this if needed
         )
         
         # Format the generated sonnet
