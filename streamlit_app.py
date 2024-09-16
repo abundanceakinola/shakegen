@@ -158,17 +158,17 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
         # Format the generated sonnet
         formatted_sonnet = format_sonnet(generated_sonnet)
         
-        # Correct grammar
-        corrected_sonnet = correct_grammar(formatted_sonnet)
+        # Clean up the text
+        cleaned_sonnet = simple_text_cleanup(formatted_sonnet)
         
         st.markdown("**Generated Sonnet:**")
         st.markdown(formatted_sonnet)
         
-        st.markdown("**Grammar-Corrected Sonnet:**")
-        st.markdown(corrected_sonnet)
+        st.markdown("**Cleaned-up Sonnet:**")
+        st.markdown(cleaned_sonnet)
     
-    # Append the generated and corrected text to the chat history
-    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Grammar-Corrected Sonnet:**\n\n{corrected_sonnet}"})
+    # Append the generated and cleaned-up text to the chat history
+    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Cleaned-up Sonnet:**\n\n{cleaned_sonnet}"})
 
 # Add this debugging information
 st.sidebar.write("Debugging Information:")
