@@ -212,11 +212,33 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
     # Append the generated and cleaned-up text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Cleaned-up Sonnet:**\n\n{cleaned_sonnet}"})
 
-# Add this debugging information
-st.sidebar.write("Debugging Information:")
+# Sidebar content
+st.sidebar.header("Model and Generation Information")
+
+# Show model details
+st.sidebar.subheader("Model Details")
 st.sidebar.write(f"Vocabulary size: {vocab_size}")
-st.sidebar.write(f"Number of characters in mapping: {len(index_to_char)}")
-st.sidebar.write("First 10 character mappings:")
+st.sidebar.write(f"Sequence length: {seq_length}")
+# Add more model details if available (e.g., number of layers, model size, etc.)
+
+# Add a guide on temperature
+st.sidebar.subheader("Temperature Guide")
+st.sidebar.write("""
+- **Low (0.1 - 0.5):** Generates more predictable, structured text.
+- **Medium (0.5 - 1.0):** Balanced creativity and coherence.
+- **High (1.0 - 2.0):** More creative but potentially less coherent.
+""")
+
+# Display user input seed text
+st.sidebar.subheader("Seed Text")
+if prompt:
+    st.sidebar.write(f"'{prompt}'")
+
+# Generation stats: length of generated text
+st.sidebar.subheader("Generation Stats")
+if generated_sonnet:
+    st.sidebar.write(f"Total Characters: {len(generated_sonnet)}")
+    st.sidebar.write(f"Total Lines: {generated_sonnet.count('\\n')}")
 for i in range(10):
     if str(i) in index_to_char:
         st.sidebar.write(f"{i}: {repr(index_to_char[str(i)])}")
