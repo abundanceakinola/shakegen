@@ -52,12 +52,17 @@ seq_length = 50  # Define your sequence length
 
 # Function to generate text using the model
 # Function to generate sonnet
+import random
+
 def generate_sonnet_with_structure(seed_text, model, seq_length, vocab_size, char_to_index, index_to_char, temperature=1.0):
     generated_text = seed_text
-    required_length = 14  # 14 lines in a sonnet (12 lines of quatrains, 2 lines of couplet)
     current_line = 0
+    required_lines = 14  # 14 lines in a sonnet (12 quatrain lines, 2 couplet lines)
+    max_line_length = 1000  # Safeguard for infinite loops
+    line_word_count = 0  # Track words per line
+    words_in_line = random.randint(8, 10)  # Randomize words per line
 
-    while current_line < required_length:
+    while current_line < required_lines:
         x = np.zeros((1, seq_length, vocab_size))
         for t, char in enumerate(generated_text[-seq_length:]):
             if char in char_to_index:
@@ -75,20 +80,29 @@ def generate_sonnet_with_structure(seed_text, model, seq_length, vocab_size, cha
 
         generated_text += next_char
 
-        # Add structure for couplets
-        if next_char == '\n':
+        # Track words by spaces (' ') and handle line breaks when word count is reached
+        if next_char == ' ':
+            line_word_count += 1
+
+        if line_word_count >= words_in_line:
+            generated_text += '\n'
             current_line += 1
+            line_word_count = 0  # Reset word count for next line
+            words_in_line = random.randint(8, 10)  # Randomize words for the next line
+
+            # Add indentation to couplet (lines 13 and 14)
             if current_line == 12:
-                generated_text += "<COUPLET_START>\n"
+                generated_text += "    <COUPLET_START>\n"
             elif current_line == 14:
-                generated_text += "<COUPLET_END>\n<SONNET_END>"
+                generated_text += "    <COUPLET_END>\n<SONNET_END>"
                 break
 
         # Safeguard against infinite loops
-        if len(generated_text) > 1000:
+        if len(generated_text) > max_line_length:
             break
 
     return generated_text
+
 
 # Function to post-process the sonnet (like your Colab code)
 def post_process_sonnet(sonnet):
