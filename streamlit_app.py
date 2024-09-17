@@ -177,9 +177,6 @@ st.title('ShakeGen')
 
 st.info('AI-powered Shakespearean Sonnet Generator')
 
-# Temperature slider for users to choose the temperature level
-temperature = st.slider('Select Temperature', 0.1, 2.0, value=0.5)
-
 # Initialize chat history
 if "chats" not in st.session_state:
     st.session_state.chats = []
