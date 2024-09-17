@@ -240,6 +240,10 @@ st.sidebar.write("""
 - **High (1.0 - 2.0):** More creative but potentially less coherent.
 """)
 
+# Temperature slider for users to choose the temperature level
+temperature = st.slider('Select Temperature', 0.1, 2.0, value=0.5)
+
+
 # Display user input seed text
 st.sidebar.subheader("Seed Text")
 if prompt:
