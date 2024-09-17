@@ -51,10 +51,10 @@ vocab_size = len(char_to_index)  # Ensure this matches your model's vocabulary s
 seq_length = 50  # Define your sequence length
 
 # Function to generate text using the model
-# Modify the generate_sonnet function
-def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, index_to_char, temperature=1.0):
+# Function to generate sonnet
+def generate_sonnet_with_structure(seed_text, model, seq_length, vocab_size, char_to_index, index_to_char, temperature=1.0):
     generated_text = seed_text
-    required_length = 14  # 14 lines in a sonnet
+    required_length = 14  # 14 lines in a sonnet (12 lines of quatrains, 2 lines of couplet)
     current_line = 0
 
     while current_line < required_length:
@@ -75,20 +75,47 @@ def generate_sonnet(seed_text, model, seq_length, vocab_size, char_to_index, ind
 
         generated_text += next_char
 
+        # Add structure for couplets
         if next_char == '\n':
             current_line += 1
+            if current_line == 12:
+                generated_text += "<COUPLET_START>\n"
+            elif current_line == 14:
+                generated_text += "<COUPLET_END>\n<SONNET_END>"
+                break
 
         # Safeguard against infinite loops
         if len(generated_text) > 1000:
             break
 
-        print(f"Predictions shape: {predictions.shape}")
-        print(f"Next index: {next_index}")
-        print(f"Generated character: {repr(next_char)}")
-
     return generated_text
 
+# Function to post-process the sonnet (like your Colab code)
+def post_process_sonnet(sonnet):
+    # Remove tags
+    sonnet = sonnet.replace("<SONNET_START>\n", "")
+    sonnet = sonnet.replace("<SONNET_END>", "")
+    sonnet = sonnet.replace("<LINE>", "")
 
+    # Split the sonnet into lines
+    lines = sonnet.split('\n')
+
+    # Process each line
+    processed_lines = []
+    for i, line in enumerate(lines):
+        # Remove any remaining tags
+        line = re.sub(r'<.*?>', '', line).strip()
+
+        # Indent the couplet (last two lines)
+        if i >= len(lines) - 2:
+            line = "    " + line
+
+        processed_lines.append(line)
+
+    # Join the lines back together
+    processed_sonnet = '\n'.join(processed_lines).strip()
+
+    return processed_sonnet
 
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
@@ -97,43 +124,6 @@ def sample(preds, temperature=1.0):
     preds = exp_preds / np.sum(exp_preds)
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
-
-
-def format_sonnet(text):
-    # If no <LINE> tags, treat the entire text as a single block
-    if '<LINE>' not in text:
-        # Format the text without assuming <LINE> tags
-        formatted_text = text.strip()
-    else:
-        # Split the text by <LINE> tags if they exist
-        lines = re.split(r'<LINE>', text)
-        # Remove empty lines and strip whitespace
-        lines = [line.strip() for line in lines if line.strip()]
-        # Join the lines with newline characters
-        formatted_text = '\n'.join(lines)
-    
-    # Remove any remaining tags
-    formatted_text = re.sub(r'<[^>]+>', '', formatted_text)
-    return formatted_text
-
-import re
-
-def simple_text_cleanup(text):
-    # Capitalize the first letter of each line
-    lines = text.split('\n')
-    cleaned_lines = [line.capitalize() for line in lines]
-    
-    # Join the lines back together
-    cleaned_text = '\n'.join(cleaned_lines)
-    
-    # Remove any non-alphabetic characters except spaces within the words
-    cleaned_text = re.sub(r'[^a-zA-Z\s.,]', '', cleaned_text)  # Keeps letters, spaces, commas, and periods
-    
-    # Ensure there's a space after each comma and period if it's missing
-    cleaned_text = re.sub(r',(\S)', r', \1', cleaned_text)
-    cleaned_text = re.sub(r'\.(\S)', r'. \1', cleaned_text)
-    
-    return cleaned_text
 
     
 # Streamlit UI
