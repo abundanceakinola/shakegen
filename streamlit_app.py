@@ -148,7 +148,7 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
 
     # Generate sonnet with the model
     with st.chat_message("assistant"):
-            generated_sonnet = generate_sonnet_with_structure(
+        generated_sonnet = generate_sonnet_with_structure(
             seed_text=prompt,
             model=model,
             seq_length=seq_length,
