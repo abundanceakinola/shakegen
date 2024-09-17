@@ -166,6 +166,9 @@ st.title('ShakeGen')
 
 st.info('AI-powered Shakespearean Sonnet Generator')
 
+# Temperature slider for users to choose the temperature level
+temperature = st.slider('Select Temperature', 0.1, 2.0, value=0.5)
+
 # Initialize chat history
 if "chats" not in st.session_state:
     st.session_state.chats = []
@@ -202,8 +205,9 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
         st.markdown("**Generated Sonnet:**")
         st.markdown(formatted_sonnet)
         
-        st.markdown("**Cleaned-up Sonnet:**")
-        st.markdown(cleaned_sonnet)
+        # Add an expander to hide or show the cleaned-up sonnet
+        with st.expander("Show Cleaned-up Sonnet"):
+            st.markdown(cleaned_sonnet)
     
     # Append the generated and cleaned-up text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Cleaned-up Sonnet:**\n\n{cleaned_sonnet}"})
