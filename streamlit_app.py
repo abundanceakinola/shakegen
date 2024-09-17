@@ -7,19 +7,10 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-# Load the latest model version from Google Drive
-version_file_url = "https://drive.google.com/uc?id=1zaNKBM8-RAfrQF9FfkcvoKBIfM6fcfou"  # Replace with your version.txt file ID
 
-# Download the version file to check the latest model
-version_file = "version.txt"
-gdown.download(version_file_url, version_file, quiet=False)
-
-# Read the latest model version from version.txt
-with open(version_file, 'r') as f:
-    latest_model_filename = f.read().strip()
-
+# Read the latest model 
 # Construct the URL to the model file
-model_file_url = f"https://drive.google.com/uc?id=1bv1XhAQY_-73DKalRLpDhukGf9h8QAok"  # Replace with actual Google Drive model file ID for the version
+model_file_url = f"https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Replace with actual Google Drive model file ID for the version
 
 # Local filenames
 model_file = latest_model_filename
