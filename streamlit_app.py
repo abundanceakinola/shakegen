@@ -32,7 +32,7 @@ if not os.path.exists(model_file):
 # Load the model
 model = load_model(model_file)
 
-
+model_file_url = f"https://drive.google.com/uc?id=1YurcSu0Xnnr966aVMqhX_PpjpqU-QHJX"  # Replace with actual Google Drive file ID for the version
 char_mappings_file = "char_mappings.json"
 
 # Only download the character mappings if it doesn't exist locally
