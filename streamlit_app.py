@@ -177,6 +177,31 @@ st.title('ShakeGen')
 
 st.info('AI-powered Shakespearean Sonnet Generator')
 
+# Sidebar content
+st.sidebar.header("Model and Generation Information")
+
+# Show model details
+st.sidebar.subheader("Model Details")
+st.sidebar.write(f"Vocabulary size: {vocab_size}")
+st.sidebar.write(f"Sequence length: {seq_length}")
+# Add more model details if available (e.g., number of layers, model size, etc.)
+
+# Add a guide on temperature
+st.sidebar.subheader("Temperature Guide")
+st.sidebar.write("""
+- **Low (0.1 - 0.5):** Generates more predictable, structured text.
+- **Medium (0.5 - 1.0):** Balanced creativity and coherence.
+- **High (1.0 - 2.0):** More creative but potentially less coherent.
+""")
+
+# Temperature slider for users to choose the temperature level (in sidebar)
+temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
+
+# Display user input seed text
+st.sidebar.subheader("Seed Text")
+if "prompt" in st.session_state:
+    st.sidebar.write(f"'{st.session_state['prompt']}'")
+
 # Initialize chat history
 if "chats" not in st.session_state:
     st.session_state.chats = []
@@ -220,29 +245,4 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
     # Append the generated and cleaned-up text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}\n\n**Cleaned-up Sonnet:**\n\n{cleaned_sonnet}"})
 
-# Sidebar content
-st.sidebar.header("Model and Generation Information")
-
-# Show model details
-st.sidebar.subheader("Model Details")
-st.sidebar.write(f"Vocabulary size: {vocab_size}")
-st.sidebar.write(f"Sequence length: {seq_length}")
-# Add more model details if available (e.g., number of layers, model size, etc.)
-
-# Add a guide on temperature
-st.sidebar.subheader("Temperature Guide")
-st.sidebar.write("""
-- **Low (0.1 - 0.5):** Generates more predictable, structured text.
-- **Medium (0.5 - 1.0):** Balanced creativity and coherence.
-- **High (1.0 - 2.0):** More creative but potentially less coherent.
-""")
-
-# Temperature slider for users to choose the temperature level
-temperature = st.slider('Select Temperature', 0.1, 2.0, value=0.5)
-
-
-# Display user input seed text
-st.sidebar.subheader("Seed Text")
-if prompt:
-    st.sidebar.write(f"'{prompt}'")
 
