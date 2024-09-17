@@ -12,16 +12,22 @@ from tensorflow.keras.models import load_model
 # Construct the URL to the model file
 model_file_url = f"https://drive.google.com/uc?id=1xtCyuXNKeyY_iRz0FVI_2Ov7q5YOPIS5"  # Replace with actual Google Drive model file ID for the version
 
-# Local filenames
-model_file = latest_model_filename
+# Local filename for the model
+model_file = "best_model.keras"
 
-# Only download if the model file doesn't exist
-if not os.path.exists(model_file):
-    with st.spinner('Downloading the latest model from Google Drive...'):
-        gdown.download(model_file_url, model_file, quiet=False)
+# Check if the model file exists, if so, delete it
+if os.path.exists(model_file):
+    with st.spinner('Deleting the existing model file...'):
+        os.remove(model_file)
+
+# Download the latest model from Google Drive
+with st.spinner('Downloading the latest model from Google Drive...'):
+    gdown.download(model_file_url, model_file, quiet=False)
 
 # Load the model
 model = load_model(model_file)
+
+st.success('Model loaded successfully!')
 
 char_mappings_url = f"https://drive.google.com/uc?id=1YurcSu0Xnnr966aVMqhX_PpjpqU-QHJX"  # Replace with actual Google Drive file ID for the version
 char_mappings_file = "char_mappings.json"
