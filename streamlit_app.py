@@ -234,13 +234,3 @@ st.sidebar.subheader("Seed Text")
 if prompt:
     st.sidebar.write(f"'{prompt}'")
 
-# Generation stats: length of generated text
-st.sidebar.subheader("Generation Stats")
-if generated_sonnet:
-    st.sidebar.write(f"Total Characters: {len(generated_sonnet)}")
-    st.sidebar.write(f"Total Lines: {generated_sonnet.count('\\n')}")
-for i in range(10):
-    if str(i) in index_to_char:
-        st.sidebar.write(f"{i}: {repr(index_to_char[str(i)])}")
-    else:
-        st.sidebar.write(f"{i}: Not found in mapping")
