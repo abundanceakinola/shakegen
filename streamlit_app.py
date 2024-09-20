@@ -126,7 +126,7 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
         formatted_sonnet = format_sonnet('\n'.join(sonnet_lines))
         
         st.markdown("**Generated Sonnet:**")
-        st.markdown(formatted_sonnet)
+        st.markdown(generated)
     
     # Append the generated text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}"})
