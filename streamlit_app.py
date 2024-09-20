@@ -48,17 +48,22 @@ def sample(preds, temperature=1.0):
 def generate_text(seed_text, length, temperature):
     generated = seed_text
     for i in range(length):
-        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))
-        for t, char in enumerate(generated[-SEQ_LENGTH:].ljust(SEQ_LENGTH)):
+        # Ensure the input sequence is of length SEQ_LENGTH (40)
+        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))  # shape (1, 40, 65)
+        
+        # Pad the sequence with spaces if it's shorter than SEQ_LENGTH
+        for t, char in enumerate(generated[-SEQ_LENGTH:].ljust(SEQ_LENGTH)):  # Ensure sequence length is 40
             if char in char_to_index:
                 x_predictions[0, t, char_to_index[char]] = 1
 
-        predictions = model.predict(x_predictions, verbose=0)[0]
+        # Make predictions and sample the next character
+        predictions = model.predict(x_predictions, verbose=0)[0]  # Ensure predictions are the correct shape
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
 
         generated += next_character
     return generated
+
 
 def format_sonnet(text):
     lines = text.split('\n')
