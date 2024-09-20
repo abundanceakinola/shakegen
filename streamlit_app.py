@@ -56,10 +56,17 @@ def sample(preds, temperature=1.0):
 
 # Text generation function
 def generate_text(length, temperature):
+    if len(text) <= SEQ_LENGTH:
+        # If the text is too short, we can't create a valid seed sequence
+        st.error("The text is too short to generate a valid seed. Please use a longer text.")
+        return ""
+    
+    # Otherwise, proceed with text generation
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
     generated = ''
     sentence = text[start_index: start_index + SEQ_LENGTH]
     generated += sentence
+    
     for i in range(length):
         x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))  # shape (1, 40, len(characters))
         
@@ -75,7 +82,9 @@ def generate_text(length, temperature):
 
         generated += next_character
         sentence = sentence[1:] + next_character  # Update the seed sentence
+    
     return generated
+
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
