@@ -29,8 +29,13 @@ if not os.path.exists(shakespeare_file):
         download_file_from_google_drive(shakespeare_file_id, shakespeare_file)
 
 # Load character mappings
+# Read and process the text
 with open(shakespeare_file, 'r', encoding='utf-8') as file:
     text = file.read()
+
+# Only use the first 97,000 characters
+text = text[1:97000]  # Cutting down to 97,000 characters
+
 characters = sorted(set(text))
 char_to_index = {c: i for i, c in enumerate(characters)}
 index_to_char = {i: c for i, c in enumerate(characters)}
@@ -90,7 +95,8 @@ st.sidebar.write(f"Vocabulary size: {len(characters)}")
 
 # Show the list of unique characters (vocabulary)
 st.sidebar.subheader("Vocabulary List")
-st.sidebar.write(characters)  # This will print the list of unique characters
+vocab_string = ', '.join(characters)
+st.sidebar.write(f"Vocabulary: {vocab_string}")
 # Temperature slider
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
