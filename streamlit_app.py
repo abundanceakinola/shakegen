@@ -35,7 +35,7 @@ characters = sorted(set(text))
 char_to_index = {c: i for i, c in enumerate(characters)}
 index_to_char = {i: c for i, c in enumerate(characters)}
 
-SEQ_LENGTH = 40
+SEQ_LENGTH = 40  # This should match your model's input sequence length
 
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
@@ -49,7 +49,7 @@ def generate_text(seed_text, length, temperature):
     generated = seed_text
     for i in range(length):
         x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))
-        for t, char in enumerate(generated[-SEQ_LENGTH:]):
+        for t, char in enumerate(generated[-SEQ_LENGTH:].ljust(SEQ_LENGTH)):
             if char in char_to_index:
                 x_predictions[0, t, char_to_index[char]] = 1
 
