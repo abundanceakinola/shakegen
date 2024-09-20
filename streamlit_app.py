@@ -82,7 +82,7 @@ def format_sonnet(text):
             formatted_lines.append(line.strip())
         else:  # Last 2 lines (couplet)
             formatted_lines.append("    " + line.strip())
-    return '\n'.join(formatted_sonnet)
+    return '\n'.join(formatted_lines)
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
@@ -101,6 +101,7 @@ st.sidebar.write(f"Vocabulary size: {len(characters)}")
 st.sidebar.subheader("Vocabulary List")
 vocab_string = ', '.join(characters)
 st.sidebar.write(f"Vocabulary: {vocab_string}")
+
 # Temperature slider
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
@@ -126,7 +127,7 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
         formatted_sonnet = format_sonnet('\n'.join(sonnet_lines))
         
         st.markdown("**Generated Sonnet:**")
-        st.markdown(generated)
+        st.markdown(formatted_sonnet)
     
     # Append the generated text to the chat history
     st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}"})
