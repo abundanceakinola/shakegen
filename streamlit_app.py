@@ -4,6 +4,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+import random  # Make sure you import random
 
 # Function to download file from Google Drive
 def download_file_from_google_drive(file_id, output_file):
@@ -57,6 +58,12 @@ def sample(preds, temperature=1.0):
 
 # Define the generate_text function exactly as in your model
 def generate_text(length, temperature):
+    # Check if text is long enough
+    if len(text) <= SEQ_LENGTH:
+        st.error("The text is too short for the given sequence length!")
+        return ""
+
+    # Ensure valid start index
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
     generated = ''
     sentence = text[start_index: start_index + SEQ_LENGTH]
@@ -100,4 +107,5 @@ temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 # Generate button
 if st.sidebar.button('Generate'):
     generated_text = generate_text(600, temperature)  # Generate 600 characters of text
-    st.markdown(f"**Generated Text:**\n\n{generated_text}")
+    if generated_text:
+        st.markdown(f"**Generated Text:**\n\n{generated_text}")
