@@ -88,6 +88,9 @@ st.sidebar.subheader("Model Details")
 st.sidebar.write(f"Sequence length: {SEQ_LENGTH}")
 st.sidebar.write(f"Vocabulary size: {len(characters)}")
 
+# Show the list of unique characters (vocabulary)
+st.sidebar.subheader("Vocabulary List")
+st.sidebar.write(characters)  # This will print the list of unique characters
 # Temperature slider
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
