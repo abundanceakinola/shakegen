@@ -1,6 +1,7 @@
 import streamlit as st
 import gdown
 import os
+import re
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -41,6 +42,8 @@ text = text[1:97000]  # Cutting down to 97,000 characters
 unwanted_chars = 'æ'  # You can add more characters to this string if needed
 text = ''.join([char for char in text if char not in unwanted_chars])
 
+clean_text = re.sub(r'[&@#%$]', '', text)
+
 characters = sorted(set(text))
 char_to_index = {c: i for i, c in enumerate(characters)}
 index_to_char = {i: c for i, c in enumerate(characters)}
@@ -57,19 +60,17 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 # Define the generate_text function exactly as in your model
-def generate_text(length, temperature):
-    # Check if text is long enough
-    if len(text) <= SEQ_LENGTH:
-        st.error("The text is too short for the given sequence length!")
-        return ""
-
+def generate_text(length, temperature=0.5):
     # Ensure valid start index
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
     generated = ''
     sentence = text[start_index: start_index + SEQ_LENGTH]
     generated += sentence
+    
     for i in range(length):
         x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))
+        
+        # Convert the sentence into one-hot encoding for predictions
         for t, char in enumerate(sentence):
             if char in char_to_index:
                 x_predictions[0, t, char_to_index[char]] = 1
@@ -77,15 +78,16 @@ def generate_text(length, temperature):
         predictions = model.predict(x_predictions, verbose=0)[0]
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
-
-        # Replace any exclamation marks with spaces
-        if next_character == "!":
-            next_character = " "
         
+        # Replace unwanted characters with a space or an appropriate character
+        if next_character in '&@$#%^*()':  # List of unwanted characters
+            next_character = ' '  # Replace with space
+
         generated += next_character
         sentence = sentence[1:] + next_character  # Shift the sentence window
     
     return generated
+
 
 
 # Streamlit UI
