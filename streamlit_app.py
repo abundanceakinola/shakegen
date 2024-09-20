@@ -78,10 +78,15 @@ def generate_text(length, temperature):
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
 
+        # Replace any exclamation marks with spaces
+        if next_character == "!":
+            next_character = " "
+        
         generated += next_character
         sentence = sentence[1:] + next_character  # Shift the sentence window
     
     return generated
+
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
