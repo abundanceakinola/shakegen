@@ -29,11 +29,12 @@ if not os.path.exists(shakespeare_file):
         download_file_from_google_drive(shakespeare_file_id, shakespeare_file)
 
 # Load character mappings
+# Read and process the text
 with open(shakespeare_file, 'r', encoding='utf-8') as file:
     text = file.read()
 
 # Only use the first 97,000 characters
-text = text[:97000]  # Cutting down to 97,000 characters
+text = text[1:97000]  # Cutting down to 97,000 characters
 
 # Clean the text to remove unwanted characters like 'æ'
 unwanted_chars = 'æ'  # You can add more characters to this string if needed
@@ -45,7 +46,7 @@ index_to_char = {i: c for i, c in enumerate(characters)}
 
 SEQ_LENGTH = 40  # This should match your model's input sequence length
 
-# Sampling function to control randomness
+# Define the sample function
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
     preds = np.log(preds) / temperature
@@ -54,37 +55,26 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-# Text generation function
+# Define the generate_text function exactly as in your model
 def generate_text(length, temperature):
-    if len(text) <= SEQ_LENGTH:
-        # If the text is too short, we can't create a valid seed sequence
-        st.error("The text is too short to generate a valid seed. Please use a longer text.")
-        return ""
-    
-    # Otherwise, proceed with text generation
     start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
     generated = ''
     sentence = text[start_index: start_index + SEQ_LENGTH]
     generated += sentence
-    
     for i in range(length):
-        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))  # shape (1, 40, len(characters))
-        
-        # Convert sentence to one-hot encoding
+        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))
         for t, char in enumerate(sentence):
             if char in char_to_index:
                 x_predictions[0, t, char_to_index[char]] = 1
 
-        # Make predictions and sample the next character
         predictions = model.predict(x_predictions, verbose=0)[0]
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
 
         generated += next_character
-        sentence = sentence[1:] + next_character  # Update the seed sentence
+        sentence = sentence[1:] + next_character  # Shift the sentence window
     
     return generated
-
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
@@ -107,12 +97,7 @@ st.sidebar.write(f"Vocabulary: {vocab_string}")
 # Temperature slider
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
-# Add a generate button in the sidebar
+# Generate button
 if st.sidebar.button('Generate'):
-    # Generate text when button is clicked
-    with st.spinner('Generating text...'):
-        generated_text = generate_text(600, temperature)  # Generate 600 characters of text
-
-    # Display generated text in the main panel
-    st.markdown("**Generated Text:**")
-    st.markdown(generated_text)
+    generated_text = generate_text(600, temperature)  # Generate 600 characters of text
+    st.markdown(f"**Generated Text:**\n\n{generated_text}")
