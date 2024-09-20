@@ -82,7 +82,7 @@ def format_sonnet(text):
             formatted_lines.append(line.strip())
         else:  # Last 2 lines (couplet)
             formatted_lines.append("    " + line.strip())
-    return '\n'.join(formatted_lines)
+    return '\n'.join(formatted_sonnet)
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
