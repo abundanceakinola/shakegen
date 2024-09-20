@@ -29,12 +29,11 @@ if not os.path.exists(shakespeare_file):
         download_file_from_google_drive(shakespeare_file_id, shakespeare_file)
 
 # Load character mappings
-# Read and process the text
 with open(shakespeare_file, 'r', encoding='utf-8') as file:
     text = file.read()
 
 # Only use the first 97,000 characters
-text = text[1:97000]  # Cutting down to 97,000 characters
+text = text[:97000]  # Cutting down to 97,000 characters
 
 # Clean the text to remove unwanted characters like 'æ'
 unwanted_chars = 'æ'  # You can add more characters to this string if needed
@@ -46,6 +45,7 @@ index_to_char = {i: c for i, c in enumerate(characters)}
 
 SEQ_LENGTH = 40  # This should match your model's input sequence length
 
+# Sampling function to control randomness
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
     preds = np.log(preds) / temperature
@@ -54,27 +54,27 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-def generate_text(seed_text, length, temperature):
-    generated = seed_text
+# Text generation function
+def generate_text(length, temperature):
+    start_index = random.randint(0, len(text) - SEQ_LENGTH - 1)
+    generated = ''
+    sentence = text[start_index: start_index + SEQ_LENGTH]
+    generated += sentence
     for i in range(length):
-        # Ensure the input sequence is of length SEQ_LENGTH (40)
-        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))  # shape (1, 40, 65)
+        x_predictions = np.zeros((1, SEQ_LENGTH, len(characters)))  # shape (1, 40, len(characters))
         
-        # Pad the sequence with spaces if it's shorter than SEQ_LENGTH
-        for t, char in enumerate(generated[-SEQ_LENGTH:].ljust(SEQ_LENGTH)):  # Ensure sequence length is 40
+        # Convert sentence to one-hot encoding
+        for t, char in enumerate(sentence):
             if char in char_to_index:
                 x_predictions[0, t, char_to_index[char]] = 1
 
         # Make predictions and sample the next character
-        predictions = model.predict(x_predictions, verbose=0)[0]  # Ensure predictions are the correct shape
-        print(f"Predictions (step {i}): {predictions}")  # Debugging: Print predictions
-        
+        predictions = model.predict(x_predictions, verbose=0)[0]
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
 
-        print(f"Generated character (step {i}): {next_character}")  # Debugging: Print each generated character
-        
         generated += next_character
+        sentence = sentence[1:] + next_character  # Update the seed sentence
     return generated
 
 # Streamlit UI
@@ -98,28 +98,12 @@ st.sidebar.write(f"Vocabulary: {vocab_string}")
 # Temperature slider
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
-# Initialize chat history
-if "chats" not in st.session_state:
-    st.session_state.chats = []
+# Add a generate button in the sidebar
+if st.sidebar.button('Generate'):
+    # Generate text when button is clicked
+    with st.spinner('Generating text...'):
+        generated_text = generate_text(600, temperature)  # Generate 600 characters of text
 
-# Display chat messages from history on app rerun
-for chat in st.session_state.chats:
-    with st.chat_message(chat["role"]):
-        st.markdown(chat["content"])
-
-# Get user input as the seed text for the model
-if prompt := st.chat_input("Enter the first line of the sonnet:"):
-    st.session_state.chats.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    # Generate sonnet with the model
-    with st.chat_message("assistant"):
-        generated_text = generate_text(prompt, 600, temperature)  # Generate 600 characters of text
-        
-        # Directly output the generated text without formatting
-        st.markdown("**Generated Text:**")
-        st.markdown(generated_text)
-    
-    # Append the generated text to the chat history
-    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Text:**\n\n{generated_text}"})
+    # Display generated text in the main panel
+    st.markdown("**Generated Text:**")
+    st.markdown(generated_text)
