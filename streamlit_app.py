@@ -67,9 +67,13 @@ def generate_text(seed_text, length, temperature):
 
         # Make predictions and sample the next character
         predictions = model.predict(x_predictions, verbose=0)[0]  # Ensure predictions are the correct shape
+        print(f"Predictions (step {i}): {predictions}")  # Debugging: Print predictions
+        
         next_index = sample(predictions, temperature)
         next_character = index_to_char[next_index]
 
+        print(f"Generated character (step {i}): {next_character}")  # Debugging: Print each generated character
+        
         generated += next_character
     return generated
 
