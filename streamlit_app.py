@@ -73,17 +73,6 @@ def generate_text(seed_text, length, temperature):
         generated += next_character
     return generated
 
-
-def format_sonnet(text):
-    lines = text.split('\n')
-    formatted_lines = []
-    for i, line in enumerate(lines[:14]):  # Ensure we only take 14 lines
-        if i < 12:  # First 12 lines (3 quatrains)
-            formatted_lines.append(line.strip())
-        else:  # Last 2 lines (couplet)
-            formatted_lines.append("    " + line.strip())
-    return '\n'.join(formatted_lines)
-
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
 
@@ -122,12 +111,11 @@ if prompt := st.chat_input("Enter the first line of the sonnet:"):
 
     # Generate sonnet with the model
     with st.chat_message("assistant"):
-        generated_text = generate_text(prompt, 600, temperature)  # Generate more text to ensure we get a full sonnet
-        sonnet_lines = generated_text.split('\n')[:14]  # Take only the first 14 lines
-        formatted_sonnet = format_sonnet('\n'.join(sonnet_lines))
+        generated_text = generate_text(prompt, 600, temperature)  # Generate 600 characters of text
         
-        st.markdown("**Generated Sonnet:**")
-        st.markdown(formatted_sonnet)
+        # Directly output the generated text without formatting
+        st.markdown("**Generated Text:**")
+        st.markdown(generated_text)
     
     # Append the generated text to the chat history
-    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Sonnet:**\n\n{formatted_sonnet}"})
+    st.session_state.chats.append({"role": "assistant", "content": f"**Generated Text:**\n\n{generated_text}"})
