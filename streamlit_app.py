@@ -36,6 +36,10 @@ with open(shakespeare_file, 'r', encoding='utf-8') as file:
 # Only use the first 97,000 characters
 text = text[1:97000]  # Cutting down to 97,000 characters
 
+# Clean the text to remove unwanted characters like 'æ'
+unwanted_chars = 'æ'  # You can add more characters to this string if needed
+text = ''.join([char for char in text if char not in unwanted_chars])
+
 characters = sorted(set(text))
 char_to_index = {c: i for i, c in enumerate(characters)}
 index_to_char = {i: c for i, c in enumerate(characters)}
