@@ -76,35 +76,58 @@ def generate_text(seed_text, length, temperature):
     
     return generated
 
+# Create a list to store past chats
+if 'past_chats' not in st.session_state:
+    st.session_state.past_chats = []
+
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition')
 
 st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
 
 # Sidebar content
-st.sidebar.header("Model and Generation Information")
+st.sidebar.header("ShakeGen Information")
+st.sidebar.write("""
+**ShakeGen** is an AI-powered text generator designed to create poetry in the style of Shakespeare using an LSTM model. 
+You can experiment with **seed text** and adjust the **temperature** slider for creative variability.
+- **Temperature**: Controls randomness. Lower values (e.g. 0.5) generate more predictable text, while higher values (e.g. 1.5) increase creativity.
+- **Example Seed Text**: "Shall I compare thee"
+""")
 
-# Show model details
-st.sidebar.subheader("Model Details")
-st.sidebar.write(f"Sequence length: {SEQ_LENGTH}")
-st.sidebar.write(f"Vocabulary size: {len(characters)}")
-
-# Show the list of unique characters (vocabulary)
-st.sidebar.subheader("Vocabulary List")
-vocab_string = ', '.join(characters)
-st.sidebar.write(f"Vocabulary: {vocab_string}")
-
-# Textbox for user input seed
-seed_text = st.text_input('Enter seed text for generation (optional)', '')
-
-# Temperature slider
+# Temperature slider in the sidebar
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
-# Generate button
-if st.sidebar.button('Generate'):
+# Display past chats (if any)
+st.subheader("Chat History")
+if st.session_state.past_chats:
+    for chat in st.session_state.past_chats:
+        st.markdown(f"**User:** {chat['seed']}\n\n**ShakeGen:** {chat['generated_text']}\n---")
+
+# Textbox for user input seed
+seed_text = st.text_input('Enter seed text for generation', '', key='input')
+
+# Generate button placed next to the input field at the bottom
+if st.button('Generate', key='generate_button'):
     if len(seed_text) < SEQ_LENGTH:
         st.warning(f"Please provide at least {SEQ_LENGTH} characters for the seed text.")
     else:
         generated_text = generate_text(seed_text, 600, temperature)  # Generate 600 characters of text
         if generated_text:
-            st.markdown(f"**Generated Text:**\n\n{generated_text}")
+            st.session_state.past_chats.append({
+                'seed': seed_text,
+                'generated_text': generated_text
+            })
+            st.experimental_rerun()
+
+# Sticky footer style for the chat input field
+st.markdown(
+    """
+    <style>
+    .stTextInput {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
