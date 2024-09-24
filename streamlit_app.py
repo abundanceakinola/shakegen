@@ -103,11 +103,26 @@ if st.session_state.past_chats:
     for chat in st.session_state.past_chats:
         st.markdown(f"**User:** {chat['seed']}\n\n**ShakeGen:** {chat['generated_text']}\n---")
 
-# Textbox for user input seed
-seed_text = st.text_input('Enter seed text for generation', '', key='input')
+# Add a div around the input and button for layout control
+st.markdown("""
+<div style="display: flex; justify-content: space-between; position: fixed; bottom: 0; width: 100%; background-color: #fff; padding: 10px;">
+    <input type="text" id="seed_input" style="width: 80%; padding: 10px;" placeholder="Enter seed text for generation" />
+    <button id="generate_button" style="width: 18%; padding: 10px;">Generate</button>
+</div>
+<script>
+    const generateButton = document.getElementById("generate_button");
+    generateButton.addEventListener("click", function() {
+        const seedText = document.getElementById("seed_input").value;
+        window.location.href = "/?seed_text=" + seedText;
+    });
+</script>
+""", unsafe_allow_html=True)
 
-# Generate button placed next to the input field at the bottom
-if st.button('Generate', key='generate_button'):
+# Extract the seed text from URL parameters
+seed_text = st.experimental_get_query_params().get("seed_text", [""])[0]
+
+# Generate button functionality
+if seed_text:
     if len(seed_text) < SEQ_LENGTH:
         st.warning(f"Please provide at least {SEQ_LENGTH} characters for the seed text.")
     else:
@@ -118,16 +133,3 @@ if st.button('Generate', key='generate_button'):
                 'generated_text': generated_text
             })
             st.experimental_rerun()
-
-# Sticky footer style for the chat input field
-st.markdown(
-    """
-    <style>
-    .stTextInput {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
