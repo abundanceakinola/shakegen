@@ -97,17 +97,20 @@ You can experiment with **seed text** and adjust the **temperature** slider for 
 # Temperature slider in the sidebar
 temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
 
-# Display past chats (if any)
+# Display past chats (if any) with scrollable chat history
 st.subheader("Chat History")
-if st.session_state.past_chats:
-    for chat in st.session_state.past_chats:
-        st.markdown(f"**User:** {chat['seed']}\n\n**ShakeGen:** {chat['generated_text']}\n---")
+chat_history = "\n\n".join([f"**User:** {chat['seed']}\n\n**ShakeGen:** {chat['generated_text']}\n---" for chat in st.session_state.past_chats])
+st.markdown(f"""
+<div style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+{chat_history}
+</div>
+""", unsafe_allow_html=True)
 
-# Add a div around the input and button for layout control
+# Add a div around the input and button for layout control, with better width
 st.markdown("""
 <div style="display: flex; justify-content: space-between; position: fixed; bottom: 0; width: 100%; background-color: #fff; padding: 10px;">
-    <input type="text" id="seed_input" style="width: 80%; padding: 10px;" placeholder="Enter seed text for generation" />
-    <button id="generate_button" style="width: 18%; padding: 10px;">Generate</button>
+    <input type="text" id="seed_input" style="width: 75%; padding: 10px;" placeholder="Enter seed text for generation" />
+    <button id="generate_button" style="width: 20%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Generate</button>
 </div>
 <script>
     const generateButton = document.getElementById("generate_button");
