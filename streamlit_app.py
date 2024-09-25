@@ -33,9 +33,9 @@ if 'past_chats' not in st.session_state:
                                     "generated_text": "Shall I compare thee to a summer's day... bleep bloop... thou art as bright as the sun!"}]
 
 # Streamlit UI
-st.title('ShakeGen: Simple LSTM Edition (Demo)')
+st.title('ShakeGen: Simple LSTM Edition')
 
-st.info('Dummy chat interface for ShakeGen LSTM model (just a demo)')
+st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
 
 # Sidebar content remains unchanged
 st.sidebar.header("ShakeGen Information")
@@ -74,8 +74,8 @@ st.markdown(f"""
 # Text input and button at the bottom of the page
 st.markdown("""
 <div style="position: fixed; bottom: 0; width: 100%; background-color: white; padding: 10px; box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);">
-    <input type="text" id="seed_input" placeholder="Enter seed text for generation" style="width: 85%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" />
-    <button id="generate_button" style="width: 10%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Generate</button>
+    <input type="text" id="seed_input" placeholder="Enter seed text for generation" style="width: 70%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" />
+    <button id="generate_button" style="width: 20%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Generate</button>
 </div>
 <script>
     const generateButton = document.getElementById("generate_button");
