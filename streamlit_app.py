@@ -34,7 +34,7 @@ if "messages" not in st.session_state:
                                  {"role": "assistant", "content": "Generated text with seed text goes here"}]
 
 # Streamlit UI title
-st.title('ShakeGen: Simple LSTM Edition')
+st.title('ShakeGen: AI Sonnet Generator')
 
 st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
 
