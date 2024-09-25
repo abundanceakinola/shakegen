@@ -25,11 +25,8 @@ if not os.path.exists(shakespeare_file):
 
 # Dummy chat response generator
 def dummy_generate_text(seed_text):
-    return f"{seed_text} And to trumm thy hays bry making mankso’r,
-On she wailot my slope eass of love, what watuay sooW; cannate
-As many goes fur maduth manck ante his trile
-And of thou and muchy verang the readd,
-Spetterest of penous day so thee thee rece."
+    return f"{seed_text}\nAnd to trumm thy hays bry making mankso’r,\nOn she wailot my slope eass of love, what watuay sooW;\ncannate\nAs many goes fur maduth manck ante his trile\nAnd of thou and muchy verang the readd,\nSpetterest of penous day so thee thee rece."
+
 
 # Initialize chat history if not already done
 if "messages" not in st.session_state:
