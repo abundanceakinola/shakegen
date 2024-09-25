@@ -25,12 +25,12 @@ if not os.path.exists(shakespeare_file):
 
 # Dummy chat response generator
 def dummy_generate_text(seed_text):
-    # Simply repeat the seed text with a "robotic" gibberish
-    return f"{seed_text}... blip bloop... I am a robot generating gibberish... blip blop."
+    return f"{seed_text}... fair winds blow and the earth's glow... bleep bloop... thou art as brilliant as the sun!"
 
 # Create a list to store past chats
 if 'past_chats' not in st.session_state:
-    st.session_state.past_chats = []
+    st.session_state.past_chats = [{"seed": "Shall I compare thee to a summer's day", 
+                                    "generated_text": "Shall I compare thee to a summer's day... bleep bloop... thou art as bright as the sun!"}]
 
 # Streamlit UI
 st.title('ShakeGen: Simple LSTM Edition (Demo)')
@@ -46,21 +46,51 @@ You can experiment with **seed text** and adjust the **temperature** slider for 
 - **Example Seed Text**: "Shall I compare thee"
 """)
 
-# Chat History Display
+# Add temperature slider (not connected to model yet)
+temperature = st.sidebar.slider('Select Temperature', 0.1, 2.0, value=0.5)
+
+# Modernized Chat History Display
 st.subheader("Chat History")
-chat_history = "\n\n".join([f"**User:** {chat['seed']}\n\n**ShakeGen:** {chat['generated_text']}\n---" for chat in st.session_state.past_chats])
+chat_history = ""
+for chat in st.session_state.past_chats:
+    # User's message (grey background)
+    chat_history += f"""
+    <div style="background-color: #e0e0e0; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+        <strong>User:</strong> {chat['seed']}
+    </div>
+    """
+    # Robot's response (white background)
+    chat_history += f"""
+    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+        <strong>ShakeGen:</strong> {chat['generated_text']}
+    </div>
+    """
 st.markdown(f"""
-<div style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
-{chat_history}
+<div style="height: 400px; overflow-y: scroll; padding: 10px;">
+    {chat_history}
 </div>
 """, unsafe_allow_html=True)
 
-# Input field and button for the chat interface
-seed_text = st.text_input("Enter seed text for generation", placeholder="Type your seed text here...")
-generate_button = st.button("Generate")
+# Text input and button at the bottom of the page
+st.markdown("""
+<div style="position: fixed; bottom: 0; width: 100%; background-color: white; padding: 10px; box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);">
+    <input type="text" id="seed_input" placeholder="Enter seed text for generation" style="width: 85%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" />
+    <button id="generate_button" style="width: 10%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Generate</button>
+</div>
+<script>
+    const generateButton = document.getElementById("generate_button");
+    generateButton.addEventListener("click", function() {
+        const seedText = document.getElementById("seed_input").value;
+        window.location.href = "/?seed_text=" + seedText;
+    });
+</script>
+""", unsafe_allow_html=True)
 
-# Generate dummy response if button is clicked
-if generate_button and seed_text:
+# Extract the seed text from URL parameters
+seed_text = st.experimental_get_query_params().get("seed_text", [""])[0]
+
+# Generate dummy response if seed text is provided
+if seed_text:
     generated_text = dummy_generate_text(seed_text)
     st.session_state.past_chats.append({
         'seed': seed_text,
