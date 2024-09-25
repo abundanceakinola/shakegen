@@ -30,8 +30,8 @@ def dummy_generate_text(seed_text):
 
 # Initialize chat history if not already done
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "user", "content": "Shall I compare thee to a summer's day"},
-                                 {"role": "assistant", "content": "Shall I compare thee to a summer's day... bleep bloop... thou art as bright as the sun!"}]
+    st.session_state.messages = [{"role": "user", "content": "User's seed text goes here"},
+                                 {"role": "assistant", "content": "Generated text with seed text goes here"}]
 
 # Streamlit UI title
 st.title('ShakeGen: Simple LSTM Edition')
