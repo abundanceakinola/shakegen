@@ -38,18 +38,20 @@ def load_and_preprocess_data(file_path, max_length=97000):
 # Load the model
 @st.cache_resource
 def load_model(model_path):
-    return tf.keras.models.load_model(model_path)
+    model = tf.keras.models.load_model(model_path)
+    st.write(f"Model input shape: {model.input_shape}")
+    st.write(f"Model output shape: {model.output_shape}")
+    return model
 
 # Text generation function
 def generate_text(model, start_text, char_to_idx, idx_to_char, length=300, temperature=0.5):
     generated_text = start_text
-    seq_length = 40  # Make sure this matches your training sequence length
+    seq_length = model.input_shape[1]  # Get sequence length from model input shape
 
     for _ in range(length):
         x_pred = np.zeros((1, seq_length, len(char_to_idx)))
-        for t, char in enumerate(start_text):
-            if t < seq_length:
-                x_pred[0, t, char_to_idx[char]] = 1
+        for t, char in enumerate(start_text[-seq_length:].ljust(seq_length)):
+            x_pred[0, t, char_to_idx.get(char, 0)] = 1  # Use get() with default value
 
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample_with_temperature(preds, temperature)
@@ -112,3 +114,9 @@ if prompt := st.chat_input("Enter a seed text"):
         st.markdown(response)
     # Add robot response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
+
+# Debug information
+st.write("Debug Information:")
+st.write(f"Number of unique characters: {len(char_to_idx)}")
+st.write(f"First few characters: {list(char_to_idx.keys())[:10]}")
+st.write(f"Input shape for generation: {(1, model.input_shape[1], len(char_to_idx))}")
