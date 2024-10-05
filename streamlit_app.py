@@ -71,6 +71,10 @@ def sample_with_temperature(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
+# Load data and model
+raw_text, char_to_idx, idx_to_char = load_and_preprocess_data(shakespeare_file)
+model = load_model(model_file)
+
 # Streamlit UI title
 st.title('ShakeGen: AI Sonnet Generator')
 st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
