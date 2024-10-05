@@ -22,16 +22,31 @@ def download_file_from_google_drive(file_id, output_file):
 # Generate text function
 def generate_text(model, start_text, char_to_idx, idx_to_char, length=300, temperature=0.5):
     generated_text = start_text
+    line_length = 40  # Arbitrary line length for stanza structure
+    num_lines = 0     # Track the number of lines generated
+
     for _ in range(length):
         x_pred = np.zeros((1, len(start_text), len(char_to_idx)))
         for t, char in enumerate(start_text):
             x_pred[0, t, char_to_idx[char]] = 1
+        
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample_with_temperature(preds, temperature)
         next_char = idx_to_char[next_index]
+        
+        # Add the next character to the generated text
         generated_text += next_char
         start_text = start_text[1:] + next_char
+
+        # Add line breaks based on punctuation or after a certain length
+        if next_char in ['.', '!', '?']:
+            generated_text += "\n"
+            num_lines += 1
+        elif len(start_text) % line_length == 0 and num_lines % 4 == 0:  # Simulate stanza structure
+            generated_text += "\n"
+
     return generated_text
+
 
 # Temperature sampling function
 def sample_with_temperature(preds, temperature=1.0):
