@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import os
+import gdown
 
 # Load and preprocess data
 def load_and_preprocess_data(file_path, max_length=97000):
@@ -13,10 +14,10 @@ def load_and_preprocess_data(file_path, max_length=97000):
     idx_to_char = {idx: char for idx, char in enumerate(unique_chars)}
     return raw_text, char_to_idx, idx_to_char
 
-# Function to download files (dummy)
+# Function to download files
 def download_file_from_google_drive(file_id, output_file):
-    # Dummy implementation
-    pass
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, output_file, quiet=False)
 
 # Generate text function
 def generate_text(model, start_text, char_to_idx, idx_to_char, length=300, temperature=0.5):
