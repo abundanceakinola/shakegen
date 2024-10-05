@@ -116,4 +116,4 @@ if prompt := st.chat_input("Enter a seed text"):
 st.write("Debug Information:")
 st.write(f"Number of unique characters: {len(char_to_idx)}")
 st.write(f"First few characters: {list(char_to_idx.keys())[:10]}")
-st.write(f"Input shape for generation: {(1, model.input_shape[1], len(char_to_idx))}")
+st.write(f"Input shape for generation: {(1, len(char_to_idx))}")
