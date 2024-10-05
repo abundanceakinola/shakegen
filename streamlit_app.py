@@ -10,14 +10,14 @@ def download_file_from_google_drive(file_id, output_file):
     gdown.download(url, output_file, quiet=False)
 
 # Download model file from Google Drive
-model_file_id = "1lRbDGMGP5ETCtfToZ_Ea9-xqtTt1mbX2"
+model_file_id = "1lRbDGMGP5ETCtfToZ_Ea9-xqtTt1mbX2"  # Replace with your actual file ID
 model_file = "best_simple_LSTM.keras"
 if not os.path.exists(model_file):
     with st.spinner('Downloading the model from Google Drive...'):
         download_file_from_google_drive(model_file_id, model_file)
 
 # Download Shakespeare text from Google Drive
-shakespeare_file_id = "1DIMeFhb40tE03Lay2gOXN40ytz1f3ptP"
+shakespeare_file_id = "1DIMeFhb40tE03Lay2gOXN40ytz1f3ptP"  # Replace with your actual file ID
 shakespeare_file = "shakespeare.txt"
 if not os.path.exists(shakespeare_file):
     with st.spinner('Downloading Shakespeare text from Google Drive...'):
@@ -43,11 +43,13 @@ def load_model(model_path):
 # Text generation function
 def generate_text(model, start_text, char_to_idx, idx_to_char, length=300, temperature=0.5):
     generated_text = start_text
+    seq_length = 40  # Make sure this matches your training sequence length
 
     for _ in range(length):
-        x_pred = np.zeros((1, len(start_text), len(char_to_idx)))
+        x_pred = np.zeros((1, seq_length, len(char_to_idx)))
         for t, char in enumerate(start_text):
-            x_pred[0, t, char_to_idx[char]] = 1
+            if t < seq_length:
+                x_pred[0, t, char_to_idx[char]] = 1
 
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample_with_temperature(preds, temperature)
