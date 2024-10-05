@@ -46,12 +46,13 @@ def load_model(model_path):
 # Text generation function
 def generate_text(model, start_text, char_to_idx, idx_to_char, length=300, temperature=0.5):
     generated_text = start_text
-    seq_length = model.input_shape[1]  # Get sequence length from model input shape
+    seq_length = 40  # Set this to match your training sequence length
 
     for _ in range(length):
-        x_pred = np.zeros((1, seq_length, len(char_to_idx)))
-        for t, char in enumerate(start_text[-seq_length:].ljust(seq_length)):
-            x_pred[0, t, char_to_idx.get(char, 0)] = 1  # Use get() with default value
+        x_pred = np.zeros((1, len(char_to_idx)))
+        for t, char in enumerate(start_text[-seq_length:]):
+            if char in char_to_idx:
+                x_pred[0, char_to_idx[char]] = 1
 
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample_with_temperature(preds, temperature)
@@ -69,10 +70,6 @@ def sample_with_temperature(preds, temperature=1.0):
     preds = exp_preds / np.sum(exp_preds)
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
-
-# Load data and model
-raw_text, char_to_idx, idx_to_char = load_and_preprocess_data(shakespeare_file)
-model = load_model(model_file)
 
 # Streamlit UI title
 st.title('ShakeGen: AI Sonnet Generator')
