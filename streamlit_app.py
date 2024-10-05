@@ -47,7 +47,6 @@ shakespeare_file = "shakespeare.txt"
 model_file_id = "1lRbDGMGP5ETCtfToZ_Ea9-xqtTt1mbX2"  # Replace with your actual file ID
 shakespeare_file_id = "1DIMeFhb40tE03Lay2gOXN40ytz1f3ptP"  # Replace with your actual file ID
 
-
 if not os.path.exists(model_file):
     with st.spinner('Downloading the model from Google Drive...'):
         download_file_from_google_drive(model_file_id, model_file)
@@ -57,7 +56,7 @@ if not os.path.exists(shakespeare_file):
         download_file_from_google_drive(shakespeare_file_id, shakespeare_file)
 
 # Load the model
-@st.cache_resource(allow_output_mutation=True)
+@st.cache_resource
 def load_model_from_file():
     return load_model(model_file)
 
