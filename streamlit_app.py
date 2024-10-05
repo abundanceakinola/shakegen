@@ -109,14 +109,16 @@ for message in st.session_state.messages:
 
 # React to user input
 if prompt := st.chat_input("Enter a seed text"):
-    # Display user input without the chat_message feature
-    st.write(f"**User Input:** {prompt}")
+    # Display user message
+    st.chat_message("user").markdown(prompt)
     
     # Generate text based on user input
     response = generate_text(model, prompt, char_to_idx, idx_to_char, length=300, temperature=temperature)
     
-    # Display the generated text without the copy slot
-    st.markdown(f"**Generated Text:**\n\n{response}")
+    # Display generated text
+    with st.chat_message("assistant"):
+        st.markdown(response)
+
 
     
     # Add both user and assistant responses to chat history
