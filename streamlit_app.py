@@ -99,7 +99,7 @@ st.title('ShakeGen: AI Sonnet Generator')
 st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
 
 # Add logo to sidebar
-logo = "shakgen_logo.png"
+logo = "ShakeGen_logo_no_bg.png"
 st.sidebar.image(logo, use_column_width=True)
 
 # Sidebar content remains unchanged
