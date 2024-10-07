@@ -71,6 +71,14 @@ if not os.path.exists(shakespeare_file):
     with st.spinner('Downloading Shakespeare text from Google Drive...'):
         download_file_from_google_drive(shakespeare_file_id, shakespeare_file)
 
+# Download logo from Google Drive
+logo_file = "ShakeGen_logo_no_bg.png"
+logo_file_id = "1jWIKSX0mYyyOo4M28NqgSX6uHSQbfzKu" 
+
+if not os.path.exists(logo_file):
+    with st.spinner('Downloading the logo from Google Drive...'):
+        download_file_from_google_drive(logo_file_id, logo_file)
+
 # Load the model
 @st.cache_resource
 def load_model_from_file():
@@ -89,6 +97,10 @@ if "messages" not in st.session_state:
 # Streamlit UI title
 st.title('ShakeGen: AI Sonnet Generator')
 st.info('AI-powered Shakespearean Sonnet Generator using Simple LSTM')
+
+# Add logo to sidebar
+logo = "shakgen_logo.png"
+st.sidebar.image(logo, use_column_width=True)
 
 # Sidebar content remains unchanged
 st.sidebar.header("ShakeGen Information")
