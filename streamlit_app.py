@@ -73,7 +73,7 @@ if not os.path.exists(shakespeare_file):
 
 # Download logo from Google Drive
 logo_file = "ShakeGen_logo_no_bg.png"
-logo_file_id = "1jWIKSX0mYyyOo4M28NqgSX6uHSQbfzKu" 
+logo_file_id = "1nscQAGhY6STIbV3lyB1oh8RhNxONP7Dw" 
 
 if not os.path.exists(logo_file):
     with st.spinner('Downloading the logo from Google Drive...'):
