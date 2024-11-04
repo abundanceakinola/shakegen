@@ -58,9 +58,9 @@ def sample_with_temperature(preds, temperature=1.0):
     return np.argmax(probas)
 
 # Download model and Shakespeare text if not already downloaded
-model_file = "best_lstm_model.keras"
+model_file = "best_stacked_3l_lstm_model.keras"
 shakespeare_file = "shakespeare.txt"
-model_file_id = "1lRbDGMGP5ETCtfToZ_Ea9-xqtTt1mbX2"  # Replace with your actual file ID
+model_file_id = "1Y0COJHcbAuygTwQuDIYEa3ED_puFO2TT"  # Replace with your actual file ID
 shakespeare_file_id = "1DIMeFhb40tE03Lay2gOXN40ytz1f3ptP"  # Replace with your actual file ID
 
 if not os.path.exists(model_file):
